@@ -1,0 +1,56 @@
+{% load static %}
+{#{% if employee %}#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'style/themes.css' %}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Edit Information</title>
+</head>
+<body>
+<h1 class="text-center">Edit and save your information</h1>
+<form id="edit_form" name="form" class="form" role="form" action="{% url 'action_edit_info' %}" method="GET">
+    {% csrf_token %}
+    {#    <input type="hidden" name="next" value="{{ request.path }}">#}
+    <input type="hidden" name="public_id" value="{{ employee.public_id }}">
+    <label for="first_name" style="width:25%; text-align: center">First Name</label>
+    <input type="text" id="first_name" name="first_name" style="width: 50%" maxlength="30"
+           value="{{ employee.first_name }}" required>
+    <br><br>
+    <label for="last_name" style="width:25%;text-align: center">Last Name</label>
+    <input type="text" id="last_name" name="last_name" style="width: 50%" maxlength="30"
+           value="{{ employee.last_name }}" required>
+    <br><br>
+    <label for="phone_number" style="width:25%;text-align: center">Phone Number</label>
+    <input type="number" id="phone_number" name="phone_number" style="width: 50%" maxlength="8"
+           value="{{ employee.phone_number }}" required>
+    <br><br>
+    <label for="email" style="width:25%;text-align: center">Email Address</label>
+    <input type="email" id="email" name="email" style="width: 50%" value="{{ employee.email }}" required>
+    <br><br>
+
+
+</form>
+<div style="padding: 12px" class="d-flex justify-content-end">
+    <button style="margin-right: 10px" id="cancel" onclick="discard()" class="btn btn-block align-self-end">
+        Cancel
+    </button>
+    <button form="edit_form" id="save" type="submit" class="btn btn-primary align-self-end" formmethod="get">
+        Save
+    </button>
+</div>
+</body>
+</html>
+<script type="text/javascript" charset="UTF-8">
+    function discard() {
+        console.log("Referer", document.referrer)
+        {# todo fix back if multiple save requests were called #}
+        if (window.confirm("Discard and go back?")) {
+            history.back()
+        } else {
+
+        }
+    }
+</script>
+{#{% endif %}#}

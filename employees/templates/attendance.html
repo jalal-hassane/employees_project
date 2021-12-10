@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="{% static 'style/themes.css' %}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Attendance</title>
+</head>
+<body style="padding: 16px">
+{% if attendance %}
+    <div class="d-flex justify-content-between">
+        <h3>Below are the previous attendance</h3>
+        <button class="btn" title="Toggle View" onclick="toggleView()"><i class="fa fa-table text-black"></i></button>
+    </div>
+
+    <ol id="list">
+        {% for att in attendance %}
+            <li><b>{{ att.date }}:</b>
+                {% if att.is_day_off %}<span class="text-dark">Day off</span>
+                {% else %}
+                    Checked in at <span class="text-primary">{{ att.check_in_time }}</span>,
+                    Checked
+                    out
+                    at <span class="text-secondary">{{ att.check_out_time }}</span>
+                {% endif %}
+            </li><br>
+        {% endfor %}
+    </ol>
+    <table id="grid" hidden class="table animated fadeInUp">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Check in Time</th>
+            <th>Check out Time</th>
+            <th>Day Off</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for att in attendance %}
+            <tr>
+                <th>{{ att.date }}</th>
+                <td>{% if att.check_in_time is not None %}{{ att.check_in_time }}{% else %}--{% endif %}</td>
+                <td>{% if att.check_out_time is not None %}{{ att.check_out_time }}{% else %}--{% endif %}</td>
+                <td>{% if att.is_day_off %}YES{% else %}NO{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <h3 class="d-flex justify-content-center text-center">No results found</h3>
+{% endif %}
+
+</body>
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+    function toggleView() {
+        let duration = 500;
+        let mGrid = document.getElementById("grid");
+        let mList = document.getElementById("list");
+        const gridHidden = mGrid.hidden;
+        console.log("Hidden", gridHidden);
+        if (gridHidden) {
+            $("#list").fadeOut(duration);
+            mList.hidden = true;
+            $("#grid").fadeIn(duration);
+            mGrid.hidden = false;
+        } else {
+            $("#grid").fadeOut(duration);
+            mGrid.hidden = true;
+            $("#list").fadeIn(duration);
+            mList.hidden = false;
+        }
+    }
+</script>
+
+

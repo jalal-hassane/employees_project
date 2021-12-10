@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'style/themes.css' %}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Employee Interface</title>
+</head>
+<style>
+    h1, h3 {
+    }
+</style>
+<body class="bg-primary justify-content-center" style="padding: 16px">
+<h1 class="text-white d-flex justify-content-center">Welcome</h1>
+
+<div class="d-flex justify-content-center">
+    <div style="width: 50%" class="bg-white d-inline-block justify-content-evenly align-center">
+        <h3 style="padding: 8px" class="text-center text-white bg-secondary">You have to login first to proceed</h3>
+        <form name="form" class="form" role="form" action="{% url 'action_login' %}" method="GET">
+            {% csrf_token %}
+            <label for="username" style="width:25%; text-align: center">Username</label>
+            <input type="text" id="username" name="username" style="width: 50%" required>
+            <br><br>
+            <label for="password" style="width:25%;text-align: center">Password</label>
+            <input type="text" id="password" name="password" style="width: 50%" required>
+            <br><br>
+            <div style="padding: 2px" class="d-flex justify-content-end">
+                <button id="login" type="submit" class="btn btn-primary align-self-end" disabled formmethod="get">
+                    Login
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+    const $form = $('.form');
+    const $inputs = $form.find('#username, #password');
+    const $buttons = $form.find('#login');
+
+    $form.on('input', function () {
+        let areFieldsValid = true;
+        console.log("test function");
+        $.each($inputs, function () {
+            const $input = $(this);
+            if ($input.val() === '') {
+                areFieldsValid = false;
+            }
+        });
+
+        $buttons.prop('disabled', !areFieldsValid);
+    });
+</script>

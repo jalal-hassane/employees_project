@@ -1,0 +1,86 @@
+{% load static %}
+{#{% if employee %}#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'style/themes.css' %}" rel="stylesheet">
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>#}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Landing</title>
+</head>
+<body style="padding: 8px">
+
+<h1 class="text-center">Welcome {{ employee.first_name }}</h1>
+<div style="height: 50%">
+    <div class="d-flex justify-content-between">
+        <h4 class="fst-italic fw-bold">Information</h4>
+        <form name="edit_form" class="edit_form" role="form" action="{% url 'render_edit_info' %}" method="GET">
+            <input type="hidden" name="public_id" value="{{ employee.public_id }}">
+            <button id="edit_info" type="submit" class="btn btn-secondary">
+                <i class="fa fa-edit text-white"></i> Edit Info
+            </button>
+        </form>
+    </div>
+
+    <ul>
+        <li><b>Department: </b>{{ employee.department }}</li>
+        <li><b>Title: </b>{{ employee.title }}</li>
+        <li><b>Vacation days: </b>{{ employee.vacation_days }}</li>
+        {#         todo calculate salary   #}
+        <li><b>Salary: </b>{{ total }}</li>
+    </ul>
+</div>
+
+<div class="d-flex justify-content-evenly">
+    <form name="form" class="form" role="form" action="{% url 'action_check_in' %}" method="GET">
+        <input type="hidden" name="public_id" value="{{ employee.public_id }}">
+        <button id="check_in" type="submit"
+                class="btn btn-primary {% if checked_in or disable_all %} disabled {% endif %}"
+                formmethod="get">
+            Check in
+        </button>
+    </form>
+
+    <form name="form1" class="form1" role="form" action="{% url 'action_check_out' %}" method="GET">
+        <input type="hidden" name="public_id" value="{{ employee.public_id }}">
+        <button id="check_out" type="submit"
+                class="btn btn-primary {% if not checked_in or disable_all %} disabled {% endif %}">Check
+            out
+        </button>
+    </form>
+
+    <form name="form2" class="form2" role="form" action="{% url 'action_mark_day_off' %}" method="GET">
+        <input type="hidden" name="public_id" value="{{ employee.public_id }}">
+        <button id="mark_day_as_off" type="submit"
+                class="btn btn-primary {% if not employee.is_full_time_employee or disable_all %} disabled{% endif %}">
+            Mark Day as Off
+        </button>
+    </form>
+
+    <form name="form3" class="form3" role="form" action="{% url 'action_previous_attendance' %}" method="GET">
+        <input type="hidden" name="public_id" value="{{ employee.public_id }}">
+        <button id="mark_day_as_off" type="submit" class="btn btn-primary">Previous Attendance</button>
+    </form>
+</div>
+
+{% if checked_in %}
+    <p style="padding: 16px" class="fw-bold" id="check_in_time"></p>
+    <script>
+        const d = new Date();
+        let text = d.toTimeString();
+        document.getElementById("check_in_time").innerHTML = "Status: Checked in at " + text;
+    </script>
+{% endif %}
+
+{% if checked_out %}
+    <p style="padding: 16px" class="fw-bold" id="check_out_time"></p>
+    <script>
+        const d = new Date();
+        let text = d.toTimeString();
+        document.getElementById("check_out_time").innerHTML = "Status: Checked out at " + text;
+    </script>
+{% endif %}
+</body>
+</html>
+{#{% endif %}#}
