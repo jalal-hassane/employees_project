@@ -231,7 +231,8 @@ def action_previous_attendance(request):
     public_id = get_request.get('public_id')
     try:
         employee = Employee.objects.get(public_id=public_id)
-        attendance = Attendance.objects.filter(employee_public_id=employee).order_by('-date', '-is_day_off')
+        attendance = Attendance.objects.filter(employee_public_id=employee) \
+            .order_by('-date', '-check_in_time', '-is_day_off')
         return render_attendance_page(request, attendance)
     except ObjectDoesNotExist:
         print("object does not exist", public_id)

@@ -8,6 +8,27 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Attendance</title>
 </head>
+<style>
+    .previous {
+        padding: 6px;
+        color: #0dcaf0;
+    }
+
+    .first {
+        padding: 6px;
+        color: #6610f2;
+    }
+
+    .next {
+        padding: 6px;
+        color: #ffc720;
+    }
+
+    .last {
+        padding: 6px;
+        color: #523e02;
+    }
+</style>
 <body style="padding: 16px">
 {% if attendance %}
     <div class="d-flex justify-content-between">
@@ -48,34 +69,104 @@
         {% endfor %}
         </tbody>
     </table>
+    <br>
+    <br>
+    <br>
+    <table id="jquery_table" class="table display" hidden>
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Check in Time</th>
+            <th>Check out Time</th>
+            <th>Day Off</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for att in attendance %}
+            <tr>
+                <th>{{ att.date }}</th>
+                <td>{% if att.check_in_time is not None %}{{ att.check_in_time }}{% else %}--{% endif %}</td>
+                <td>{% if att.check_out_time is not None %}{{ att.check_out_time }}{% else %}--{% endif %}</td>
+                <td>{% if att.is_day_off %}YES{% else %}NO{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <caption class="text-center">First jQuery Table</caption>
+
+    </table>
 {% else %}
     <h3 class="d-flex justify-content-center text-center">No results found</h3>
 {% endif %}
 
 </body>
 </html>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/css" src="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"></script>
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/dt-1.10.13/b-1.2.4/b-html5-1.2.4/b-print-1.2.4/fh-3.1.2/r-2.1.1/sc-1.4.2/datatables.min.css"/>
+
 <script>
 
     function toggleView() {
+        let jQueryTable = $('#jquery_table');
+        let jList = $('#list');
+        let jGrid = $('#grid');
         let duration = 500;
         let mGrid = document.getElementById("grid");
         let mList = document.getElementById("list");
+        let mJqueryTable = document.getElementById("jquery_table");
         const gridHidden = mGrid.hidden;
         console.log("Hidden", gridHidden);
         if (gridHidden) {
-            $("#list").fadeOut(duration);
+            jList.fadeOut(duration);
             mList.hidden = true;
-            $("#grid").fadeIn(duration);
+            jGrid.fadeIn(duration);
             mGrid.hidden = false;
+            mJqueryTable.hidden = false;
+            $(document).ready(function () {
+                jQueryTable.DataTable().destroy();
+                jQueryTable.DataTable({
+                    "pagingType": "full_numbers" // this line shows first/last buttons in table
+                });
+                {% comment %}$('#jquery_table').DataTable({
+                    "ordering": true,
+                    "data": mData,
+                    "searching": true,
+                    "columns": [
+                        {'data': 'name'},
+                        {'data': 'age'},
+                        {'data': 'address'},
+                        {'data': 'city'}
+                    ]
+                });{% endcomment %}
+            });
         } else {
-            $("#grid").fadeOut(duration);
+            jGrid.fadeOut(duration);
             mGrid.hidden = true;
-            $("#list").fadeIn(duration);
+            jList.fadeIn(duration);
             mList.hidden = false;
+            mJqueryTable.hidden = true;
+            $(document).ready(function () {
+                jQueryTable.DataTable().destroy();
+                jQueryTable.DataTable({
+                    "bPaginate": false,
+                    "searching": false,
+                    {#"bLengthChange": false,#}
+                    "bFilter": true,
+                    "bInfo": false,
+                    {#"bAutoWidth": false#}
+                });
+            });
         }
     }
+
+    {% comment %}let mData = [
+        {"name": "John", "age": 31, "address": "123 Street", "city": "New York"},
+        {"name": "John", "age": 31, "address": "123 Street", "city": "New York"},
+        {"name": "John", "age": 31, "address": "123 Street", "city": "New York"},
+        {"name": "John", "age": 31, "address": "123 Street", "city": "New York"},
+    ];{% endcomment %}
 </script>
 
 
