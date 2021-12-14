@@ -9,6 +9,7 @@
     <title>Attendance</title>
 </head>
 <style>
+
     .previous {
         padding: 6px;
         color: #0dcaf0;
@@ -82,13 +83,15 @@
         </tr>
         </thead>
         <tbody>
-        {% for att in attendance %}
-            <tr>
-                <th>{{ att.date }}</th>
-                <td>{% if att.check_in_time is not None %}{{ att.check_in_time }}{% else %}--{% endif %}</td>
-                <td>{% if att.check_out_time is not None %}{{ att.check_out_time }}{% else %}--{% endif %}</td>
-                <td>{% if att.is_day_off %}YES{% else %}NO{% endif %}</td>
-            </tr>
+        {% for i in "x"|rjust:"10" %}
+            {% for att in attendance %}
+                <tr>
+                    <th>{{ att.date }}</th>
+                    <td>{% if att.check_in_time is not None %}{{ att.check_in_time }}{% else %}--{% endif %}</td>
+                    <td>{% if att.check_out_time is not None %}{{ att.check_out_time }}{% else %}--{% endif %}</td>
+                    <td>{% if att.is_day_off %}YES{% else %}NO{% endif %}</td>
+                </tr>
+            {% endfor %}
         {% endfor %}
         </tbody>
         <caption class="text-center">First jQuery Table</caption>
@@ -125,21 +128,9 @@
             mGrid.hidden = false;
             mJqueryTable.hidden = false;
             $(document).ready(function () {
-                jQueryTable.DataTable().destroy();
                 jQueryTable.DataTable({
-                    "pagingType": "full_numbers" // this line shows first/last buttons in table
+                    "pagingType": "full_numbers", // this line shows first/last buttons in table
                 });
-                {% comment %}$('#jquery_table').DataTable({
-                    "ordering": true,
-                    "data": mData,
-                    "searching": true,
-                    "columns": [
-                        {'data': 'name'},
-                        {'data': 'age'},
-                        {'data': 'address'},
-                        {'data': 'city'}
-                    ]
-                });{% endcomment %}
             });
         } else {
             jGrid.fadeOut(duration);
@@ -149,24 +140,9 @@
             mJqueryTable.hidden = true;
             $(document).ready(function () {
                 jQueryTable.DataTable().destroy();
-                jQueryTable.DataTable({
-                    "bPaginate": false,
-                    "searching": false,
-                    {#"bLengthChange": false,#}
-                    "bFilter": true,
-                    "bInfo": false,
-                    {#"bAutoWidth": false#}
-                });
             });
         }
     }
-
-    {% comment %}let mData = [
-        {"name": "John", "age": 31, "address": "123 Street", "city": "New York"},
-        {"name": "John", "age": 31, "address": "123 Street", "city": "New York"},
-        {"name": "John", "age": 31, "address": "123 Street", "city": "New York"},
-        {"name": "John", "age": 31, "address": "123 Street", "city": "New York"},
-    ];{% endcomment %}
 </script>
 
 
